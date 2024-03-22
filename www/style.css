@@ -7,7 +7,7 @@ body {
 
 a,
 a:visited {
-  color: darkviolet;
+  color: deeppink;
   text-decoration: none;
 }
 
@@ -19,15 +19,74 @@ table {
 
 th,
 td {
-  border: 1px solid darkviolet;
+  border: 1px solid deeppink;
   width: 20px;
   height: 20px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.7);
 }
 
+th {
+  background-color: rgba(255, 200, 255, 0.7);
+}
+
 footer {
   position: absolute;
   left: 20px;
   bottom: 20px;
+}
+
+.training {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.large-kana {
+  font-size: 150px;
+  padding: 30px 30px 0;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.message {
+  background: rgba(255, 255, 255, 0.5);
+  line-height: 25px;
+  height: 40px;
+  padding-right: 25px;
+}
+
+/* Hack to colorize check mark:
+ * Set background color, and use the text as a mask */
+.message--correct::before,
+.message--wrong::before {
+  padding-right: 10px;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.message--correct::before {
+  content: "✔️";
+  background-color: limegreen;
+}
+
+.message--wrong::before {
+  content: "✖️";
+  background-color: red;
+  position: relative;
+  top: 2px;
+}
+
+.answer {
+  font-size: 75px;
+  text-align: center;
+}
+
+.correct {
+  color: limegreen;
+  background-color: rgb(200, 255, 200, 0.7);
+}
+
+.wrong {
+  color: red;
+  background-color: rgb(255, 200, 200, 0.7);
 }
