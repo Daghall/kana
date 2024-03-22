@@ -29,6 +29,7 @@ const hiragana = {
   "N": "ん",
 };
 
+
 function drawWelcome() {
   drawMain(createElement("div", { className: "welcome" }, [
     createElement("h1", { textContent: "Kana" }),
@@ -47,8 +48,14 @@ function drawWelcome() {
   ]));
 }
 
-function train(kanas) {
-  const randomized = shuffleKanas(kanas);
+
+function train(kanas, filterList) {
+  const randomized = shuffleKanas(kanas)
+    .filter((kana) => {
+      if (!filterList) return true;
+      return filterList[kana.name];
+    });
+
   console.log({randomized}); // eslint-disable-line no-console
   let disableSubmit = false;
 
@@ -71,6 +78,7 @@ function train(kanas) {
       try {
         const key = substituteSound(answer.name, true);
         const name = answer.name.toLowerCase();
+
         if (answer.value.toLowerCase() === name) {
           correct[key] = true;
           message.textContent = `${name}`;
@@ -162,8 +170,26 @@ function drawKana(kanas, correct = {}, wrong = {}) {
     table.appendChild(row);
   });
 
-  drawMain(table);
+  const children = [
+    table,
+    createElement("button", {
+      textContent: "Back",
+      onclick: drawWelcome,
+    }),
+  ];
+
+  if (Object.keys(wrong).length > 0) {
+    children.push(createElement("button", {
+      textContent: "Continue",
+      onclick() {
+        train(hiragana, wrong);
+      },
+    }));
+  }
+
+  drawMain(createElement("div", null, children));
 }
+
 
 function drawMain(element) {
   while (main.lastElementChild) {
