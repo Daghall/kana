@@ -1,0 +1,33 @@
+body {
+  background-image: url(background.jpg);
+  background-size: 200%;
+  font-family: sans-serif;
+  font-size: x-large;
+}
+
+a,
+a:visited {
+  color: darkviolet;
+  text-decoration: none;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 400px;
+}
+
+th,
+td {
+  border: 1px solid darkviolet;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+footer {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+}
