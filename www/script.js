@@ -34,56 +34,57 @@ function train(kanas) {
   console.log({randomized}); // eslint-disable-line no-console
   let disableSubmit = false;
 
-  const form = document.createElement("form");
-  const largeKana = document.createElement("span");
-  const message = document.createElement("span");
-  const answer = document.createElement("input");
+  const largeKana = createElement("span", { className: "large-kana" });
+  const message = createElement("span", { className: "message" });
+  const answer = createElement("input", {
+    type: "text",
+    className: "answer",
+  });
 
   const correct = {};
   const wrong = {};
 
-  form.className = "training";
-  largeKana.className = "large-kana";
-  message.className = "message";
-  answer.type = "text";
-  answer.className = "answer";
-  form.onsubmit = () => {
-    if (disableSubmit) return false;
-    disableSubmit = true;
+  const form = createElement("form", {
+    className: "training",
+    onsubmit: () => {
+      if (disableSubmit) return false;
+      disableSubmit = true;
 
-    try {
-      const key = substituteSound(answer.name, true);
-      const name = answer.name.toLowerCase();
-      if (answer.value.toLowerCase() === name) {
-        correct[key] = true;
-        message.textContent = `${name}`;
-        message.classList.add("message--correct");
-        console.log("correct"); // eslint-disable-line no-console
-      } else {
-        message.textContent = `${name}`;
-        message.classList.add("message--wrong");
-        wrong[key] = true;
-        console.log(`WRONG – "${answer.value}" should have been "${answer.name}"`); // eslint-disable-line no-console
+      try {
+        const key = substituteSound(answer.name, true);
+        const name = answer.name.toLowerCase();
+        if (answer.value.toLowerCase() === name) {
+          correct[key] = true;
+          message.textContent = `${name}`;
+          message.classList.add("message--correct");
+          console.log("correct"); // eslint-disable-line no-console
+        } else {
+          message.textContent = `${name}`;
+          message.classList.add("message--wrong");
+          wrong[key] = true;
+          console.log(`WRONG – "${answer.value}" should have been "${answer.name}"`); // eslint-disable-line no-console
+        }
+
+        if (randomized.length > 0) {
+          setTimeout(() => {
+            drawFoo(randomized.pop());
+            disableSubmit = false;
+          }, 1000);
+        } else {
+          drawKana(kanas, correct, wrong);
+        }
+      } catch (e) {
+        console.log({e}); // eslint-disable-line no-console
       }
 
-      if (randomized.length > 0) {
-        setTimeout(() => {
-          drawFoo(randomized.pop());
-          disableSubmit = false;
-        }, 1000);
-      } else {
-        drawKana(kanas, correct, wrong);
-      }
-    } catch (e) {
-      console.log({e}); // eslint-disable-line no-console
-    }
-
-    return false;
-  };
-
-  form.appendChild(largeKana);
-  form.appendChild(message);
-  form.appendChild(answer);
+      return false;
+    },
+  },
+  [
+    largeKana,
+    message,
+    answer,
+  ]);
 
   drawMain(form);
   drawFoo(randomized.pop());
@@ -101,32 +102,25 @@ function train(kanas) {
 
 function drawKana(kanas, correct = {}, wrong = {}) {
   console.log({correct, wrong}); // eslint-disable-line no-console
-  const table = document.createElement("table");
-  const header = document.createElement("tr");
-  header.appendChild(document.createElement("th"));
-
-  vowels.forEach((vowel) => {
-    const cell = document.createElement("th");
-    cell.innerText = vowel;
-    header.appendChild(cell);
-  });
-
-  table.appendChild(header);
+  const table = createElement("table", null, [
+    createElement("tr", null, [
+      createElement("th"),
+      ...vowels.map((vowel) => createElement("th", { textContent: vowel })),
+    ]),
+  ]);
 
   consonants.forEach((consonant) => {
-    const row = document.createElement("tr");
-    const rowHeader = document.createElement("th");
+    const row = createElement("tr");
+    const rowHeader = createElement("th", { textContent: consonant.toLowerCase() });
 
-    rowHeader.innerText = consonant.toLowerCase();
     row.appendChild(rowHeader);
 
     if (typeof kanas[consonant] === "object") {
       vowels.forEach((vowel) => {
         const kana = kanas[consonant][vowel];
-        const cell = document.createElement("td");
+        const cell = createElement("td", { textContent: kana || "" });
 
         if (kana) {
-          cell.innerText = kana;
           if (correct[consonant + vowel]) {
             cell.className = "correct";
           } else if (wrong[consonant + vowel]) {
@@ -137,8 +131,7 @@ function drawKana(kanas, correct = {}, wrong = {}) {
         row.appendChild(cell);
       });
     } else {
-      const cell = document.createElement("td");
-      cell.textContent = kanas[consonant];
+      const cell = createElement("td", { textContent: kanas[consonant] });
 
       if (correct[consonant]) {
         cell.className = "correct";
@@ -209,6 +202,21 @@ function substituteSound(kana, reverse = false) {
   } else {
     return substitituions[kana] || kana;
   }
+}
+
+function createElement(tagName, options, children = []) {
+  const element = document.createElement(tagName);
+  Object.entries(options ?? {}).forEach(([key, value]) => {
+    if (value) {
+      element[key] = value;
+    }
+  });
+
+  children.forEach((child) => {
+    element.appendChild(child);
+  });
+
+  return element;
 }
 
 train(hiragana);
