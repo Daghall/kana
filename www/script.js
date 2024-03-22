@@ -29,6 +29,24 @@ const hiragana = {
   "N": "ん",
 };
 
+function drawWelcome() {
+  drawMain(createElement("div", { className: "welcome" }, [
+    createElement("h1", { textContent: "Kana" }),
+    createElement("button", {
+      textContent: "ひらがな",
+      onclick() {
+        drawKana(hiragana);
+      },
+    }),
+    createElement("button", {
+      textContent: "Train",
+      onclick() {
+        train(hiragana);
+      },
+    }),
+  ]));
+}
+
 function train(kanas) {
   const randomized = shuffleKanas(kanas);
   console.log({randomized}); // eslint-disable-line no-console
@@ -219,4 +237,4 @@ function createElement(tagName, options, children = []) {
   return element;
 }
 
-train(hiragana);
+drawWelcome();
