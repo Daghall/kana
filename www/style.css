@@ -11,6 +11,11 @@ a:visited {
   text-decoration: none;
 }
 
+main {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
 h1 {
   color: mediumvioletred;
 }
