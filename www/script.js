@@ -1,17 +1,5 @@
 "use strict";
 
-// 		a		i		u		e		o
-// 		あ	い	う	え	お
-// k	か	き	く	け	こ
-// s	さ	し	す	せ	そ
-// t	た	ち	つ	て	と
-// n	な	に	ぬ	ね	の
-// h	は	ひ	ふ	へ	ほ
-// m	ま	み	む	め	も
-// y	や			ゆ			よ
-// r	ら	り	る	れ	ろ
-// w	わ							を
-
 const main = document.getElementsByTagName("main")[0];
 const vowels = [ "a", "i", "u", "e", "o" ];
 const consonants = [ "", "k", "s", "t", "n", "h", "m", "y", "r", "w", "N" ];
@@ -28,6 +16,24 @@ const hiragana = {
   "w": {	a: "わ", /*                      */ o: "を" },
   "N": "ん",
 };
+const katakana = {
+  "": {		a: "ア", i: "イ", u: "ウ", e: "エ", o: "オ" },
+  "k": { 	a: "カ", i: "キ", u: "ク", e: "ケ", o: "コ" },
+  "s": {	a: "サ", i: "シ", u: "ス", e: "セ", o: "ソ" },
+  "t": {	a: "タ", i: "チ", u: "ツ", e: "テ", o: "ト" },
+  "n": {	a: "ナ", i: "ニ", u: "ヌ", e: "ネ", o: "ノ" },
+  "h": {	a: "ハ", i: "ヒ", u: "フ", e: "ヘ", o: "ホ" },
+  "m": {	a: "マ", i: "ミ", u: "ム", e: "メ", o: "モ" },
+  "y": {	a: "ヤ", /*    */ u: "ユ", /*    */ o: "よ" },
+  "r": {	a: "ラ", i: "リ", u: "ル", e: "レ", o: "ロ" },
+  "w": {	a: "ワ", /*                      */ o: "ヲ" },
+  "N": "ン",
+};
+const backButton = createElement("button", {
+  textContent: "Back",
+  onclick: drawWelcome,
+  type: "button",
+});
 
 
 function drawWelcome() {
@@ -40,9 +46,9 @@ function drawWelcome() {
       },
     }),
     createElement("button", {
-      textContent: "Train",
+      textContent: "カタカナ",
       onclick() {
-        train(hiragana);
+        drawKana(katakana);
       },
     }),
   ]));
@@ -112,6 +118,7 @@ function train(kanas, filterList) {
     largeKana,
     message,
     answer,
+    backButton,
   ]);
 
   drawMain(form);
@@ -174,17 +181,22 @@ function drawKana(kanas, correct = {}, wrong = {}) {
 
   const children = [
     table,
-    createElement("button", {
-      textContent: "Back",
-      onclick: drawWelcome,
-    }),
+    backButton,
   ];
+
 
   if (Object.keys(wrong).length > 0) {
     children.push(createElement("button", {
       textContent: "Continue",
       onclick() {
         train(hiragana, wrong);
+      },
+    }));
+  } else {
+    children.push(createElement("button", {
+      textContent: "Train",
+      onclick() {
+        train(kanas);
       },
     }));
   }
