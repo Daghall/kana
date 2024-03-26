@@ -97,7 +97,9 @@ function train(kanas, filterList) {
             disableSubmit = false;
           }, 1000);
         } else {
-          drawKana(kanas, correct, wrong);
+          setTimeout(() => {
+            drawKana(kanas, correct, wrong);
+          }, 1000);
         }
       } catch (e) {
         console.log({e}); // eslint-disable-line no-console
